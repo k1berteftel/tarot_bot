@@ -27,7 +27,7 @@ async def start_getter(event_from_user: User, dialog_manager: DialogManager, **k
         admin = True
     media = MediaAttachment(
         type=ContentType.PHOTO,
-        path='img.png'
+        path='media/img.png'
     )
     return {
         'media': media,
