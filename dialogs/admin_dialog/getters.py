@@ -254,7 +254,7 @@ async def start_malling(clb: CallbackQuery, widget: Button, dialog_manager: Dial
     await dialog_manager.switch_to(adminSG.start)
 
 
-async def prices_getter(dialog_manager: DialogManager):
+async def prices_getter(dialog_manager: DialogManager, **kwargs):
     session: DataInteraction = dialog_manager.middleware_data.get('session')
     relation = await session.get_rate_price('relation')
     old = await session.get_rate_price('old')
