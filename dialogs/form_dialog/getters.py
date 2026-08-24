@@ -43,7 +43,7 @@ async def get_name(msg: Message, widget: ManagedTextInput, dialog_manager: Dialo
 
 async def get_birthday(msg: Message, widget: ManagedTextInput, dialog_manager: DialogManager, text: str):
     try:
-        birthday = datetime.strptime(text.strip(), "%d:%m:%Y")
+        birthday = datetime.strptime(text.strip(), "%d.%m.%Y")
     except Exception as err:
         print(err)
         await msg.answer('❗️Дата рождения не соответствует формату указанному выше, пожалуйста попробуйте снова')
@@ -65,7 +65,7 @@ async def get_partner_name(msg: Message, widget: ManagedTextInput, dialog_manage
 
 async def get_partner_birthday(msg: Message, widget: ManagedTextInput, dialog_manager: DialogManager, text: str):
     try:
-        birthday = datetime.strptime(text, "%d:%m:%Y")
+        birthday = datetime.strptime(text, "%d.%m.%Y")
     except Exception:
         await msg.answer('❗️Дата рождения не соответствует формату указанному выше, пожалуйста попробуйте снова')
         return
@@ -162,16 +162,11 @@ async def fee_getter(event_from_user: User, dialog_manager: DialogManager, **kwa
     rate = dialog_manager.dialog_data.get('rate')
     cost = await session.get_rate_price(rate)
     if not dialog_manager.start_data:
-        text = (f'📋 Ваша анкета передана в работу. Благодарим за доверие!\n\nСейчас вашим делом займётся '
-                f'<b>один из тарологов</b> нашей группы. Мы подбираем мастера под энергию вашего вопроса, '
-                f'чтобы расклад был максимально точным\n\n<b>🃏 О стоимости:</b>\nНаши расклады тарифицируются '
-                f'по сложности. Для вашего запроса стоимость составляет {cost} рублей.\n\n<b>💡 Как проходит сеанс:</b>\n'
-                f'После подтверждения оплаты мы запускаем процесс визуального расклада. Это не автоматический алгоритм, '
-                f'а живая работа с колодой, поэтому на интерпретацию уходит <b>от 3 до 7 минут</b>. '
-                f'За это время таролог погружается в вашу ситуацию, вытягивает карты и формулирует '
-                f'послание специально для вас.\n\n👉 Чтобы начать сеанс и запустить таймер ожидания, нажмите кнопку '
-                f'<b>«Перейти к оплате»</b>.\n\n<em>После успешной оплаты вы получите уведомление о начале сеанса, '
-                f'а через пару минут — готовый текст с расшифровкой прямо в этот чат.</em>')
+        text = (f'📋 Ваш запрос принят. Благодарим за доверие! 🔮\n\n<b>🃏 Стоимость расклада — {cost} ₽</b>\n\n'
+                f'После оплаты начнётся разбор вашего запроса. В течение нескольких минут вы получите подробную '
+                f'интерпретацию карт и ответ прямо в этом чате ✨\n\n👉 Нажмите <b>«Перейти к оплате»</b>, '
+                f'чтобы продолжить.\n<blockquote>После успешной оплаты вы получите уведомление о начале сеанса, '
+                f'а через пару минут — готовый текст с расшифровкой прямо в этот чат.</blockquote>')
     else:
         text = dialog_manager.start_data.get('text')
     return {

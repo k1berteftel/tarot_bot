@@ -21,7 +21,7 @@ form_dialog = Dialog(
         state=FormSG.get_name,
     ),
     Window(
-        Const('<tg-emoji emoji-id="5765009678002033928">✍</tg-emoji>Введите вашу дату рождения (в формате дд:мм:гг):'),
+        Const('<tg-emoji emoji-id="5765009678002033928">✍</tg-emoji>Введите вашу дату рождения <em>(в формате дд.мм.гггг)</em>:'),
         TextInput(
             id='get_birthday',
             on_success=getters.get_birthday
@@ -38,7 +38,7 @@ form_dialog = Dialog(
         state=FormSG.get_partner_name
     ),
     Window(
-        Const('<tg-emoji emoji-id="5765009678002033928">✍</tg-emoji>Введите дату рождения партнера:'),
+        Const('<tg-emoji emoji-id="5765009678002033928">✍</tg-emoji>Введите дату рождения партнера (в формате дд.мм.гггг):'),
         TextInput(
             id='get_partner_birthday',
             on_success=getters.get_partner_birthday
@@ -101,8 +101,7 @@ form_dialog = Dialog(
         SwitchTo(Const('Назад'), id='back', state=FormSG.get_birthday, style=Style(emoji_id="5388584622328131561")),
         getter=getters.choose_sphere_getter,
         state=FormSG.get_sphere
-    ),
-    Window(
+    ),    Window(
         Const('<tg-emoji emoji-id="5436113877181941026">❓</tg-emoji>Есть ли у вас конкретный вопрос или цель на ближайшие 3 месяца?'),
         TextInput(
             id='get_purpose',
@@ -120,6 +119,7 @@ form_dialog = Dialog(
         ),
         state=FormSG.get_question
     ),
+
     Window(
         Format('{text}'),
         Column(

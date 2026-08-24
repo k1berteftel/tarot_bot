@@ -57,12 +57,12 @@ async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, conte
                 chat_id=user_id,
                 text='✅Оплата прошла успешно'
             )
-            await execute_rate(user_id, currency, data, payment_type, bot, context, session)
+            await execute_rate(user_id, currency, data, bot, context, session)
             break
         await asyncio.sleep(interval)
 
 
-async def execute_rate(user_id: int, currency: int, data: dict, payment_type: str, bot: Bot, context: FSMContext, session: DataInteraction):
+async def execute_rate(user_id: int, currency: int, data: dict, bot: Bot, context: FSMContext, session: DataInteraction):
     rate = data.get('rate')
     # учет по базе данных
     await session.increment_static('sum', currency)
