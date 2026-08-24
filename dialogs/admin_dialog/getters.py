@@ -272,6 +272,7 @@ async def prices_getter(dialog_manager: DialogManager, **kwargs):
 
 async def change_price_choose(clb: CallbackQuery, widget: Button, dialog_manager: DialogManager):
     rate = clb.data.split('_')[0]
+    dialog_manager.dialog_data['rate'] = rate
     await dialog_manager.switch_to(adminSG.get_price)
 
 
