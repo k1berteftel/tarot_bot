@@ -265,7 +265,9 @@ async def prices_getter(dialog_manager: DialogManager, **kwargs):
             f'"Вернется ли бывший": {old}₽\n'
             f'"Будущее на 3 месяца": {future}₽\n'
             f'"Стоимость допродажи": {question}₽\n')
-    return text
+    return {
+        'text': text
+    }
 
 
 async def change_price_choose(clb: CallbackQuery, widget: Button, dialog_manager: DialogManager):
