@@ -167,10 +167,8 @@ class DataInteraction():
 
     async def set_rate_price(self, rate_name: str, price: float | int):
         async with self._sessions() as session:
-            await session.execute(update(PricesTable).values(
-                {
-                    rate_name: price
-                }
+            await session.execute(update(PricesTable).where(PricesTable.rate_name == rate_name).values(
+                price=price
             ))
             await session.commit()
 
