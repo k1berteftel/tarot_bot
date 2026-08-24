@@ -133,8 +133,8 @@ async def process_arranging(form_data: dict, user_id: int, bot: Bot, context: FS
                 ...
             await bot.send_message(
                 chat_id=user_id,
-                text='🚨Во время отправки сообщения произошла неизвестная ошибка, пожалуйста обратитесь в поддержку'
-            )  # добавить контакт поддержки
+                text='🚨Во время отправки сообщения произошла неизвестная ошибка, пожалуйста обратитесь в поддержку @vedymahelpbot'
+            )
     try:
         await progress_message.delete()
     except Exception:
