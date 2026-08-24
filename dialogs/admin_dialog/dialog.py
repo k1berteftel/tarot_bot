@@ -43,6 +43,7 @@ admin_dialog = Dialog(
             id='get_price',
             on_success=getters.get_price
         ),
+        SwitchTo(Const('🔙 Назад'), id='back_prices', state=adminSG.prices),
         state=adminSG.get_price
     ),
     Window(
