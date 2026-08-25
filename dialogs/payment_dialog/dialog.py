@@ -15,7 +15,7 @@ payment_dialog = Dialog(
         Const('<tg-emoji emoji-id="5380025207773741278">🏦</tg-emoji><b>Выберите способ оплаты</b>\n'),
         Format('{text}'),
         Column(
-            Button(Const('СБП'), id='sbp_payment_choose', on_click=getters.payment_choose, style=Style(emoji_id="5265074015868822600")),
+            #Button(Const('СБП'), id='sbp_payment_choose', on_click=getters.payment_choose, style=Style(emoji_id="5265074015868822600")),
             Button(Const('Карта'), id='card_payment_choose', on_click=getters.payment_choose, style=Style(emoji_id="5801180866071760635")),
             # Button(Const('CryptoBot'), id='cb_payment_choose', on_click=getters.payment_choose, style=Style(emoji_id="5361836987642815474")),
         ),

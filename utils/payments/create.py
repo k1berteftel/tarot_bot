@@ -16,15 +16,15 @@ Configuration.account_id = config.yookassa.account_id
 Configuration.secret_key = config.yookassa.secret_key
 
 
-async def get_yookassa_url(amount: int, description: str):
+async def get_yookassa_url(amount: int | float, description: str):
     payment = await Payment.create({
         "amount": {
-            "value": str(amount) + '.00',
+            "value": str(amount),
             "currency": "RUB"
         },
         "confirmation": {
             "type": "redirect",
-            "return_url": "https://t.me/childrenhelprobot"
+            "return_url": "https://t.me/VedmaAstroBot"
         },
         "receipt": {
             "customer": {
@@ -34,7 +34,7 @@ async def get_yookassa_url(amount: int, description: str):
                 {
                     'description': description,
                     "amount": {
-                        "value": str(amount) + '.00',
+                        "value": str(amount),
                         "currency": "RUB"
                     },
                     'measure': 'another',
