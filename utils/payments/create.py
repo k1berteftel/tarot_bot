@@ -3,60 +3,63 @@ import asyncio
 import datetime
 from aiohttp import ClientSession
 
-from yookassa import Payment, Configuration, Payout
-from yookassa.payment import PaymentResponse
+from aioyookassa import YooKassa
+from aioyookassa.types.payment import (Money, Confirmation, Receipt, Customer,
+                                       PaymentItem, PaymentAmount, PaymentSubject, PaymentMode)
+from aioyookassa.types.enum import PaymentStatus, ConfirmationType, Currency
+from aioyookassa.types.params import CreatePaymentParams, GetPaymentsParams
 
 from config_data.config import Config, load_config
 
 
 config: Config = load_config()
+proxy = config.proxy
+proxy = f'http://{proxy.login}:{proxy.password}@{proxy.ip}:{proxy.port}'
+client = YooKassa(api_key=config.yookassa.secret_key, shop_id=config.yookassa.account_id) # proxy=proxy
 
 
-Configuration.account_id = config.yookassa.account_id
-Configuration.secret_key = config.yookassa.secret_key
-
-
-async def get_yookassa_url(amount: int | float, description: str):
-    payment = await Payment.create({
-        "amount": {
-            "value": str(amount),
-            "currency": "RUB"
-        },
-        "confirmation": {
-            "type": "redirect",
-            "return_url": "https://t.me/VedmaAstroBot"
-        },
-        "receipt": {
-            "customer": {
-                "email": "kkulis985@gmail.com"
-            },
-            'items': [
-                {
-                    'description': description,
-                    "amount": {
-                        "value": str(amount),
-                        "currency": "RUB"
-                    },
-                    'measure': 'another',
-                    'vat_code': 1,
-                    'quantity': 1,
-                    'payment_subject': 'payment',
-                    'payment_mode': 'full_payment'
-                }
+async def get_yookassa_url(amount: float | int, description: str):
+    params = CreatePaymentParams(
+        amount=Money(value=float(amount), currency=Currency.RUB),
+        confirmation=Confirmation(type=ConfirmationType.REDIRECT, return_url="https://t.me/VedmaAstroBot"),
+        description=description,
+        receipt=Receipt(
+            customer=Customer(
+                email='kkulis985@gmail.com'
+            ),
+            items=[
+                PaymentItem(
+                    description=description,
+                    amount=PaymentAmount(value=float(amount), currency=Currency.RUB),
+                    measure='another',
+                    vat_code=1,
+                    quantity=1,
+                    payment_subject=PaymentSubject.PAYMENT,
+                    payment_mode=PaymentMode.FULL_PAYMENT
+                )
             ]
-        },
-        "capture": True,
-        "description": description
-    }, uuid.uuid4())
-    url = payment.confirmation.confirmation_url
+        )
+
+    )
+    payment = await client.payments.create_payment(params)
+
+    await client.close()
+
     return {
-        'url': url,
+        'url': payment.confirmation.url,
         'id': payment.id
     }
 
 
-async def check_yookassa_payment(payment_id):
-    payment: PaymentResponse = await Payment.find_one(payment_id)
+async def check_yookassa_payment(payment_id: str):
+    payment = await client.payments.get_payment(payment_id)
+    await client.close()
     if payment.paid:
         return True
     return False
+
+
+# result = (asyncio.run(get_yookassa_url(10.0, 'Тест')))
+# print(result)
+# asyncio.run(asyncio.sleep(5))
+# print(asyncio.run(check_yookassa_payment(result.get('id'))))

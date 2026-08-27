@@ -1,5 +1,6 @@
 aiogram
 arcanite
+aioyookassa
 aiogram_dialog
 APScheduler
 asyncpg
@@ -12,5 +13,4 @@ pydantic
 SQLAlchemy
 pillow
 pytz
-yookassa-async
 

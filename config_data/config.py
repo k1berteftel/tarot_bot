@@ -35,12 +35,21 @@ class APIMart:
 
 
 @dataclass
+class Proxy:
+    login: str
+    password: str
+    ip: str
+    port: int
+
+
+@dataclass
 class Config:
     bot: tg_bot
     db: DB
     nats: NatsConfig
     yookassa: Yookassa
     apimart: APIMart
+    proxy: Proxy
 
 
 def load_config(path: str | None = None) -> Config:
@@ -65,4 +74,10 @@ def load_config(path: str | None = None) -> Config:
         apimart=APIMart(
             api_key=env('apimart_api_key')
         ),
+        proxy=Proxy(
+            login=env('login'),
+            password=env('password'),
+            ip=env('ip'),
+            port=int(env('port'))
+        )
     )
