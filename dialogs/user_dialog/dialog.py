@@ -12,7 +12,7 @@ from states.state_groups import startSG, adminSG
 user_dialog = Dialog(
     Window(
         DynamicMedia('media'),
-        Const('Добро пожаловать 🌙\n\nЯ твоя личная ведьма-таролог 🔮\nПомогу разобраться в ситуации с помощью карт '
+        Const('mellivora\nДобро пожаловать 🌙\n\nЯ твоя личная ведьма-таролог 🔮\nПомогу разобраться в ситуации с помощью карт '
               'Таро — посмотрим чувства, отношения, деньги и то, что пока остаётся скрытым ✨\n\n'
               '<b>🎁 Бесплатный расклад — 1 раз в день!</b>\n\nТакже могу провести ритуал, вернуть бывшего '
               'или сделать привязку к нынешнему партнёру ❤️'),
@@ -28,6 +28,8 @@ user_dialog = Dialog(
                 text='Какой-то текст'
             ))),
             #Button(Const('🔮 Вопрос-ответ'), id='question_rate_choose', on_click=getters.choose_rate),
+            Url(Const("Политики конфиденциальности"), id='policy_url', url=Const('https://telegra.ph/Politika-konfidencialnosti-08-27-94')),
+            Url(Const('Пользовательское соглашение'), id='agree_url', url=Const('https://telegra.ph/Polzovatelskoe-soglashenie-08-27-70')),
             Start(Const('Админ панель'), id='admin', state=adminSG.start, when='admin')
         ),
         getter=getters.start_getter,

@@ -87,15 +87,15 @@ async def get_situation_getter(event_from_user: User, dialog_manager: DialogMana
 
 async def get_situation(msg: Message, widget: ManagedTextInput, dialog_manager: DialogManager, text: str):
     dialog_manager.dialog_data['situation'] = text
-    await dialog_manager.switch_to(FormSG.fee)
-    # state: FSMContext = dialog_manager.middleware_data.get('state')
-    # bot: Bot = dialog_manager.middleware_data.get('bot')
-    # task = asyncio.create_task(process_arranging(
-    #     dialog_manager.dialog_data,
-    #     msg.from_user.id,
-    #     bot,
-    #     state
-    # ))
+    #await dialog_manager.switch_to(FormSG.fee)
+    state: FSMContext = dialog_manager.middleware_data.get('state')
+    bot: Bot = dialog_manager.middleware_data.get('bot')
+    task = asyncio.create_task(process_arranging(
+        dialog_manager.dialog_data,
+        msg.from_user.id,
+        bot,
+        state
+    ))
     # pass  # TODO: перевод на форму оплаты с продающим текстом для 3 типов раскладов
 
 
@@ -150,7 +150,15 @@ async def sphere_selector(clb: CallbackQuery, widget: Select, dialog_manager: Di
 
 async def get_purpose(msg: Message, widget: ManagedTextInput, dialog_manager: DialogManager, text: str):
     dialog_manager.dialog_data['purpose'] = text
-    await dialog_manager.switch_to(FormSG.fee)
+    state: FSMContext = dialog_manager.middleware_data.get('state')
+    bot: Bot = dialog_manager.middleware_data.get('bot')
+    task = asyncio.create_task(process_arranging(
+        dialog_manager.dialog_data,
+        msg.from_user.id,
+        bot,
+        state
+    ))
+    #await dialog_manager.switch_to(FormSG.fee)
 
 
 async def get_question(msg: Message, widget: ManagedTextInput, dialog_manager: DialogManager, text: str):
