@@ -34,7 +34,7 @@ async def menu_getter(event_from_user: User, dialog_manager: DialogManager, **kw
 
 async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: DialogManager):
     session: DataInteraction = dialog_manager.middleware_data.get('session')
-    state: FSMContext = dialog_manager.dialog_data.get('state')
+    state: FSMContext = dialog_manager.middleware_data.get('state')
     rate = dialog_manager.dialog_data.get('rate')
     cost = dialog_manager.dialog_data.get('cost')
     payment_type = clb.data.split('_')[0]
