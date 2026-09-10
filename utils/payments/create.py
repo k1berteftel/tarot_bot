@@ -2,6 +2,7 @@ import random
 import uuid
 import asyncio
 import datetime
+import logging
 from aiohttp import ClientSession, ClientTimeout, TCPConnector
 
 from aioplatega import Platega, PaymentDetails, PaymentMethodInt, PlategaAPIError
@@ -14,7 +15,7 @@ from aioyookassa.types.params import CreatePaymentParams, GetPaymentsParams
 
 from config_data.config import Config, load_config
 
-
+logger = logging.getLogger(__name__)
 config: Config = load_config()
 proxy = config.proxy
 
@@ -103,11 +104,11 @@ async def get_platega_sbp(amount: float, user_id: int):
             'id': data.transaction_id
         }
     except PlategaAPIError as err:
-        print(err.message, err.errors, err.body)
-        print(err)
+        logger.error(err.message, err.errors, err.body)
+        logger.error(err)
         return False
     except Exception as err:
-        print(err)
+        logger.error(err)
         return False
     finally:
         try:
@@ -130,15 +131,15 @@ async def get_platega_card(amount: float, user_id: int):
             payload=str(random.randint(100000, 999999)),
 
         )
-        print(data)
+        logger.info(data)
         # print(data.transaction_id, int(data.transaction_id), str(data.transaction_id))
         return {
             'url': data.redirect,
             'id': data.transaction_id
         }
     except PlategaAPIError as err:
-        print(err.message, err.errors)
-        print(f'platega api err: {err}')
+        logger.error(str(err.errors))
+        logger.error(f'platega api err: {err}')
         return False
     except Exception as err:
         print(err)

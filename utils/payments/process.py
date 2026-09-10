@@ -39,7 +39,7 @@ async def wait_for_payment(
     """
     logger.info(f'Start bg checking payment "{payment_id}" - {user_id}')
     try:
-        await asyncio.wait_for(_poll_payment(payment_id, user_id, currency, bot, context, data, session,  payment_type, check_interval),
+        await asyncio.wait_for(_poll_payment(payment_id, user_id, currency, bot, context, bg_manager, data, session,  payment_type, check_interval),
                                timeout=timeout)
 
     except TimeoutError:
