@@ -30,13 +30,14 @@ async def wait_for_payment(
         data: dict,
         session: DataInteraction,
         currency: int,
-        payment_type: Literal['card'],
+        payment_type: Literal['card', 'sbp'],
         timeout: int = 60 * 15,
         check_interval: int = 6
 ):
     """
     Ожидает оплаты в фоне. Завершается при оплате или по таймауту.
     """
+    logger.info(f'Start bg checking payment "{payment_id}" - {user_id}')
     try:
         await asyncio.wait_for(_poll_payment(payment_id, user_id, currency, bot, context, data, session,  payment_type, check_interval),
                                timeout=timeout)
@@ -54,19 +55,22 @@ async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, conte
     Завершается, когда платёж оплачен.
     """
     while True:
-        if payment_type == 'card':
+        if payment_type in ['card', 'sbp']:
+            logger.info('Checking plageta transaction')
             status = await check_platega_transaction(payment_id)
+            logger.info(f'Transaction status: {status}')
         else:
             status = False
         if status:
             try:
                 await bg_manager.done()
             except Exception as err:
-                logger.error('err')
+                logger.error(err)
             await bot.send_message(
                 chat_id=user_id,
                 text='✅Оплата прошла успешно'
             )
+            logger.info('Start execute rate')
             await execute_rate(user_id, currency, data, bot, context, session)
             break
         await asyncio.sleep(interval)

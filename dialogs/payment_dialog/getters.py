@@ -78,7 +78,7 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
                 data=dialog_manager.dialog_data,
                 session=session,
                 currency=cost,
-                payment_type='card',
+                payment_type='sbp',
             )
         )
         for active_task in asyncio.all_tasks():
