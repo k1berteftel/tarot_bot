@@ -32,13 +32,15 @@ async def menu_getter(event_from_user: User, dialog_manager: DialogManager, **kw
     return {'text': text}
 
 
-async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: DialogManager, dialog_bg_factory: BgManagerFactory):
+async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: DialogManager):
     bot: Bot = dialog_manager.middleware_data.get('bot')
     session: DataInteraction = dialog_manager.middleware_data.get('session')
     state: FSMContext = dialog_manager.middleware_data.get('state')
     rate = dialog_manager.dialog_data.get('rate')
     cost = dialog_manager.dialog_data.get('cost')
     payment_type = clb.data.split('_')[0]
+
+    dialog_bg_factory: BgManagerFactory = dialog_manager.middleware_data.get('dialog_bg_factory')
 
     bg_manager = dialog_bg_factory.bg(
         bot,
@@ -72,6 +74,7 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
                 user_id=clb.from_user.id,
                 bot=clb.bot,
                 context=state,
+                bg_manager=bg_manager,
                 data=dialog_manager.dialog_data,
                 session=session,
                 currency=cost,
