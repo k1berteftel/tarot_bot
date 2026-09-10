@@ -35,6 +35,12 @@ class APIMart:
 
 
 @dataclass
+class Platega:
+    merchant_id: str
+    secret_key: str
+
+
+@dataclass
 class Proxy:
     login: str
     password: str
@@ -48,6 +54,7 @@ class Config:
     db: DB
     nats: NatsConfig
     yookassa: Yookassa
+    platega: Platega
     apimart: APIMart
     proxy: Proxy
 
@@ -70,6 +77,10 @@ def load_config(path: str | None = None) -> Config:
         yookassa=Yookassa(
             account_id=int(env('account_id')),
             secret_key=env('secret_key')
+        ),
+        platega=Platega(
+            merchant_id=env('platega_merchant_id'),
+            secret_key=env('platega_secret_key')
         ),
         apimart=APIMart(
             api_key=env('apimart_api_key')

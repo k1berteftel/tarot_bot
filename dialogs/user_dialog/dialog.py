@@ -12,7 +12,7 @@ from states.state_groups import startSG, adminSG
 user_dialog = Dialog(
     Window(
         DynamicMedia('media'),
-        Const('mellivora\nДобро пожаловать 🌙\n\nЯ твоя личная ведьма-таролог 🔮\nПомогу разобраться в ситуации с помощью карт '
+        Const('Добро пожаловать 🌙\n\nЯ твоя личная ведьма-таролог 🔮\nПомогу разобраться в ситуации с помощью карт '
               'Таро — посмотрим чувства, отношения, деньги и то, что пока остаётся скрытым ✨\n\n'
               '<b>🎁 Бесплатный расклад — 1 раз в день!</b>\n\nТакже могу провести ритуал, вернуть бывшего '
               'или сделать привязку к нынешнему партнёру ❤️'),
@@ -21,11 +21,10 @@ user_dialog = Dialog(
             Button(Const('💔 Вернется ли бывший'), id='old_rate_choose', on_click=getters.choose_rate),
             Button(Const('🎴 Одна карта'), id='one_card_choose', on_click=getters.one_card),
             #Button(Const('💰 Финансы и работа'), id='finance_rate_choose', on_click=getters.choose_rate),
-            # TODO:
             Button(Const('✨ Будущее на 3 месяца'), id='future_rate_choose', on_click=getters.choose_rate),
             Url(Const('🕯Ритуал'), id='ritual_url', url=Const(get_user_text_link(
                 username=f'vedymasay',
-                text='Какой-то текст'
+                text='Здравствуйте, хочу провести ритуал'
             ))),
             #Button(Const('🔮 Вопрос-ответ'), id='question_rate_choose', on_click=getters.choose_rate),
             Url(Const("Политики конфиденциальности"), id='policy_url', url=Const('https://telegra.ph/Politika-konfidencialnosti-08-27-94')),

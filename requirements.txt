@@ -1,5 +1,6 @@
 aiogram
 arcanite
+aioplatega
 aioyookassa
 aiogram_dialog
 APScheduler

@@ -9,7 +9,7 @@ from aiogram_dialog.widgets.kbd import Button, Select
 from aiogram_dialog.widgets.input import ManagedTextInput
 from nats.js import JetStreamContext
 
-from utils.payments.create import (get_yookassa_url)
+from utils.payments.create import (get_platega_sbp, get_platega_card)
 from utils.payments.process import wait_for_payment
 from database.action_data_class import DataInteraction
 from config_data.config import load_config, Config
@@ -40,7 +40,7 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
     payment_type = clb.data.split('_')[0]
 
     if payment_type == 'card':
-        payment = await get_yookassa_url(cost, RATES_DESCRIPTION.get(rate))
+        payment = await get_platega_card(cost, clb.from_user.id)
         task = asyncio.create_task(
             wait_for_payment(
                 payment_id=payment.get('id'),
@@ -57,7 +57,22 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
             if active_task.get_name() == f'process_payment_{clb.from_user.id}':
                 active_task.cancel()
     else:
-        pass
+        payment = await get_platega_sbp(cost, clb.from_user.id)
+        task = asyncio.create_task(
+            wait_for_payment(
+                payment_id=payment.get('id'),
+                user_id=clb.from_user.id,
+                bot=clb.bot,
+                context=state,
+                data=dialog_manager.dialog_data,
+                session=session,
+                currency=cost,
+                payment_type='card',
+            )
+        )
+        for active_task in asyncio.all_tasks():
+            if active_task.get_name() == f'process_payment_{clb.from_user.id}':
+                active_task.cancel()
     dialog_manager.dialog_data['url'] = payment.get('url')
     await dialog_manager.switch_to(PaymentSG.process_payment)
 

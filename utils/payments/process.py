@@ -7,7 +7,7 @@ from aiogram import Bot
 from aiogram.fsm.context import FSMContext
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from utils.payments.create import check_yookassa_payment
+from utils.payments.create import check_platega_transaction
 from utils.layout.arranging import process_arranging
 from database.action_data_class import DataInteraction
 from config_data.config import Config, load_config
@@ -49,7 +49,7 @@ async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, conte
     """
     while True:
         if payment_type == 'card':
-            status = await check_yookassa_payment(payment_id)
+            status = await check_platega_transaction(payment_id)
         else:
             status = False
         if status:
