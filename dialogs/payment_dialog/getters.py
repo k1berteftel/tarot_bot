@@ -78,10 +78,10 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
 
 
 async def process_payment_getter(event_from_user: User, dialog_manager: DialogManager, **kwargs):
-    amount = dialog_manager.dialog_data.get('amount')
-    usdt = dialog_manager.dialog_data.get('usdt')
+    amount = dialog_manager.dialog_data.get('cost')
+    #usdt = dialog_manager.dialog_data.get('usdt')
     url = dialog_manager.dialog_data.get('url')
-    text = f'<blockquote> - Сумма к оплате: {amount}₽ ({usdt}$)</blockquote>'
+    text = f'<blockquote> - Сумма к оплате: {amount}₽ </blockquote>' #({usdt}$)
     return {
         'text': text,
         'url': url
