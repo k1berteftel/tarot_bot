@@ -21,6 +21,20 @@ logger = logging.getLogger(__name__)
 config: Config = load_config()
 
 
+async def close_all_dialogs(bg_manager):
+    try:
+        await bg_manager.done()
+    except Exception as e:
+        logger.debug(f"done() raised: {e}")
+    while True:
+        try:
+            await bg_manager.done()
+            await asyncio.sleep(0.05)
+        except Exception as e:
+            logger.debug(f"stack empty: {e}")
+            break
+
+
 async def wait_for_payment(
         payment_id,
         user_id: int,
@@ -62,10 +76,7 @@ async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, conte
         else:
             status = False
         if status:
-            try:
-                await bg_manager.done()
-            except Exception as err:
-                logger.error(err)
+            await close_all_dialogs(bg_manager)
             await bot.send_message(
                 chat_id=user_id,
                 text='✅Оплата прошла успешно'
