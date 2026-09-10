@@ -3,7 +3,7 @@ import asyncio
 from aiogram import Bot
 from aiogram.types import CallbackQuery, User, Message
 from aiogram.fsm.context import FSMContext
-from aiogram_dialog import DialogManager, ShowMode
+from aiogram_dialog import DialogManager, ShowMode, BgManagerFactory
 from aiogram_dialog.api.entities import MediaAttachment
 from aiogram_dialog.widgets.kbd import Button, Select
 from aiogram_dialog.widgets.input import ManagedTextInput
@@ -32,12 +32,19 @@ async def menu_getter(event_from_user: User, dialog_manager: DialogManager, **kw
     return {'text': text}
 
 
-async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: DialogManager):
+async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: DialogManager, dialog_bg_factory: BgManagerFactory):
+    bot: Bot = dialog_manager.middleware_data.get('bot')
     session: DataInteraction = dialog_manager.middleware_data.get('session')
     state: FSMContext = dialog_manager.middleware_data.get('state')
     rate = dialog_manager.dialog_data.get('rate')
     cost = dialog_manager.dialog_data.get('cost')
     payment_type = clb.data.split('_')[0]
+
+    bg_manager = dialog_bg_factory.bg(
+        bot,
+        user_id=clb.from_user.id,
+        chat_id=clb.message.chat.id,
+    )
 
     if payment_type == 'card':
         payment = await get_platega_card(cost, clb.from_user.id)
@@ -47,6 +54,7 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
                 user_id=clb.from_user.id,
                 bot=clb.bot,
                 context=state,
+                bg_manager=bg_manager,
                 data=dialog_manager.dialog_data,
                 session=session,
                 currency=cost,

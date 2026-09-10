@@ -1,16 +1,21 @@
 import asyncio
+import logging
 from asyncio import TimeoutError
 from typing import Literal
 from datetime import datetime, date, timedelta, time
 
 from aiogram import Bot
 from aiogram.fsm.context import FSMContext
+from aiogram_dialog import BaseDialogManager
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from utils.payments.create import check_platega_transaction
 from utils.layout.arranging import process_arranging
 from database.action_data_class import DataInteraction
 from config_data.config import Config, load_config
+
+
+logger = logging.getLogger(__name__)
 
 
 config: Config = load_config()
@@ -21,6 +26,7 @@ async def wait_for_payment(
         user_id: int,
         bot: Bot,
         context: FSMContext,
+        bg_manager: BaseDialogManager,
         data: dict,
         session: DataInteraction,
         currency: int,
@@ -42,7 +48,7 @@ async def wait_for_payment(
         print(f"Ошибка в фоновом ожидании платежа {payment_id}: {e}")
 
 
-async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, context: FSMContext, data: dict, session: DataInteraction,  payment_type: str, interval: int):
+async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, context: FSMContext, bg_manager: BaseDialogManager, data: dict, session: DataInteraction,  payment_type: str, interval: int):
     """
     Цикл опроса статуса платежа.
     Завершается, когда платёж оплачен.
@@ -53,6 +59,10 @@ async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, conte
         else:
             status = False
         if status:
+            try:
+                await bg_manager.done()
+            except Exception as err:
+                logger.error('err')
             await bot.send_message(
                 chat_id=user_id,
                 text='✅Оплата прошла успешно'
