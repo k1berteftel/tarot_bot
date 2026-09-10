@@ -5,7 +5,7 @@ import datetime
 from aiohttp import ClientSession, ClientTimeout, TCPConnector
 
 from aioplatega import Platega, PaymentDetails, PaymentMethodInt, PlategaAPIError
-from aioplatega.enums import PaymentStatus
+from aioplatega.enums.payment_status import PaymentStatus
 from aioyookassa import YooKassa
 from aioyookassa.types.payment import (Money, Confirmation, Receipt, Customer,
                                        PaymentItem, PaymentAmount, PaymentSubject, PaymentMode)
@@ -155,4 +155,4 @@ async def get_platega_card(amount: float, user_id: int):
 
 async def check_platega_transaction(transaction_id):
     transaction = await client.get_transaction_status(transaction_id)
-    return transaction.status == PaymentStatus.CONFIRMED
+    return transaction.status == 'CONFIRMED'
