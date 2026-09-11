@@ -48,7 +48,7 @@ async def get_static(clb: CallbackQuery, widget: Button, dialog_manager: DialogM
             f'<b>Прирост аудитории:</b>\n - За сегодня: +{entry.get("today")}\n - Вчера: +{entry.get("yesterday")}'
             f'\n - Позавчера: + {entry.get("2_day_ago")}\n\n<b>Доходы/Расклады:</b>'
             f' - Сумма покупок: {static.sum}\n - Кол-во покупок: {static.buys}\n - За сегодня: {static.today}₽'
-            f'\n - За неделю: {static.week}₽\n - За месяц: {static.month}₽\n - За все время: {static.total}₽\n'
+            f'\n - За неделю: {static.week}₽\n - За месяц: {static.month}₽\n'
             f' - Покупок "Диагностика отношений": {static.relation_buys}\n - Покупок "Вернется ли бывший":'
             f' {static.old_buys}\n - Покупок "Будущее на 3 месяца": {static.future_buys}\n'
             f' - Допродаж: {static.question_buys}')
