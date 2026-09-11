@@ -94,6 +94,7 @@ async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, messa
 async def execute_rate(user_id: int, currency: int, data: dict, bot: Bot, context: FSMContext):
     rate = data.get('rate')
     # учет по базе данных
+    logger.info('Increment static values')
     await session.add_income(currency)
     await session.increment_static('buys', 1)
     await session.increment_static(rate + '_buys', 1)
@@ -101,6 +102,7 @@ async def execute_rate(user_id: int, currency: int, data: dict, bot: Bot, contex
     if user.join:
         await session.update_deeplink_earn(user.join, currency)
 
+    logger.info('Create task to arranging')
     task = asyncio.create_task(process_arranging(
         form_data=data,
         user_id=user_id,

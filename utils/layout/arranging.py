@@ -99,7 +99,7 @@ async def create_messages(form_data: dict, rate: str, context_messages: list[Bas
     try:
         result_json = json.loads(result)
     except Exception as err:
-        logger.error(f'Json loads Error')
+        logger.error(f'Json loads Error: {err}')
         return None
 
     if not validate_ai_response(result_json):
@@ -121,8 +121,11 @@ async def create_messages(form_data: dict, rate: str, context_messages: list[Bas
 
 
 async def process_arranging(form_data: dict, user_id: int, bot: Bot, context: FSMContext, messages: list[BaseAiMessage] = None):
+    logger.info('Start arranging process')
     rate = form_data.get('rate')
+    logger.info(f'Trying to create messages for rate "{rate}"')
     result = await create_messages(form_data, rate, context_messages=messages)
+    logger.info(f'Messages created: {bool(result)}')
     progress_message = await wait_with_progress(user_id, bot, 10, 20)
     if not result:
         result = await create_messages(form_data, rate, context_messages=messages)
