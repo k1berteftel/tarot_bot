@@ -160,7 +160,7 @@ class DataInteraction():
     async def add_income(self, income: int):
         async with self._sessions() as session:
             await session.execute(update(StaticTable).values(
-                total=StaticTable.sum + income,
+                sum=StaticTable.sum + income,
                 today=StaticTable.today + income,
                 week=StaticTable.week + income,
                 month=StaticTable.month + income
