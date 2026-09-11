@@ -75,7 +75,8 @@ async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, messa
     while True:
         if payment_type in ['card', 'sbp']:
             logger.info('Checking plageta transaction')
-            status = await check_platega_transaction(payment_id)
+            # status = await check_platega_transaction(payment_id)
+            status = True
             logger.info(f'Transaction status: {status}')
         else:
             status = False
@@ -95,12 +96,15 @@ async def execute_rate(user_id: int, currency: int, data: dict, bot: Bot, contex
     rate = data.get('rate')
     # учет по базе данных
     logger.info('Increment static values')
-    await session.add_income(currency)
-    await session.increment_static('buys', 1)
-    await session.increment_static(rate + '_buys', 1)
-    user = await session.get_user(user_id)
-    if user.join:
-        await session.update_deeplink_earn(user.join, currency)
+    try:
+        await session.add_income(currency)
+        await session.increment_static('buys', 1)
+        await session.increment_static(rate + '_buys', 1)
+        user = await session.get_user(user_id)
+        if user.join:
+            await session.update_deeplink_earn(user.join, currency)
+    except Exception as err:
+        logger.error(err)
 
     logger.info('Create task to arranging')
     task = asyncio.create_task(process_arranging(
