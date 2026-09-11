@@ -21,11 +21,7 @@ logger = logging.getLogger(__name__)
 
 
 def _get_result_prompt(data: dict, rate: str, first: bool = True) -> str:
-    if first:
-        prompt = PROMPTS.get(rate)
-    else:
-        # rate == 'question'
-        prompt = ADDITIONAL_PROMPTS.get(rate)
+    prompt_template = PROMPTS.get(rate) if first else ADDITIONAL_PROMPTS.get(rate)
     if rate == 'relation':
         prompt_data = {
             'name': data.get('name'),
@@ -65,11 +61,11 @@ def _get_result_prompt(data: dict, rate: str, first: bool = True) -> str:
         pass
 
     if first:
-        prompt = prompt.format(**prompt_data)
+        prompt = prompt_template.format(**prompt_data)
     else:
         # rate == 'question'
         prompt_data['user_question'] = data.get('question')
-        prompt.format(**prompt_data)
+        prompt = prompt_template.format(**prompt_data)
     return prompt
 
 
@@ -145,6 +141,7 @@ async def process_arranging(form_data: dict, user_id: int, bot: Bot, context: FS
                 chat_id=user_id,
                 text='🚨Во время отправки сообщения произошла неизвестная ошибка, пожалуйста обратитесь в поддержку @vedymahelpbot'
             )
+            return
     try:
         await progress_message.delete()
     except Exception:
