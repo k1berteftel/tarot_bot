@@ -91,11 +91,12 @@ async def handle_choose_upsell_question(clb: CallbackQuery, dialog_manager: Dial
 async def handle_payment_switcher(clb: CallbackQuery, dialog_manager: DialogManager, session: DataInteraction, state: FSMContext):
     data = await state.get_data()
     ai_context = data.get('ai_context')
-    data: dict = data.get('ai_data')
+    rate = data.get('init_rate')
     question = data.get('target_question')
     cost = data.get('cost')
+    data: dict = data.get('ai_data')
 
-    data['rate'] = data.get('init_rate')
+    data['rate'] = rate
     data['question'] = question
     data['ai_context'] = ai_context
     data['cost'] = cost
