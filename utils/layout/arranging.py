@@ -24,9 +24,8 @@ def _get_result_prompt(data: dict, rate: str, first: bool = True) -> str:
     if first:
         prompt = PROMPTS.get(rate)
     else:
-        prompt = ADDITIONAL_PROMPTS.get('rate')
+        prompt = ADDITIONAL_PROMPTS.get(rate)
         prompt.format(user_question=data.get('question'))
-    print(rate)
     if rate == 'relation':
         prompt_data = {
             'name': data.get('name'),
