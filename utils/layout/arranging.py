@@ -68,7 +68,8 @@ def _get_result_prompt(data: dict, rate: str, first: bool = True) -> str:
         prompt = prompt.format(**prompt_data)
     else:
         # rate == 'question'
-        prompt.format(**prompt_data, user_question=data.get('question'))
+        prompt_data['user_question'] = data.get('question')
+        prompt.format(**prompt_data)
     return prompt
 
 
