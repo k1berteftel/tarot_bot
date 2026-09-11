@@ -16,7 +16,7 @@ admin_dialog = Dialog(
             Button(Const('📊 Получить статистику'), id='get_static', on_click=getters.get_static),
             SwitchTo(Const('🛫Сделать рассылку'), id='mailing_menu_switcher', state=adminSG.get_mail),
             SwitchTo(Const('Управление ценами'), id='prices_switcher', state=adminSG.prices),
-            SwitchTo(Const('🔗 Управление диплинками'), id='deeplinks_menu_switcher', state=adminSG.deeplink_menu),
+            SwitchTo(Const('🔗 Управление диплинками'), id='deeplinks_menu_switcher', state=adminSG.deeplinks_menu),
             SwitchTo(Const('👥 Управление админами'), id='admin_menu_switcher', state=adminSG.admin_menu),
             SwitchTo(Const('Управление ОП'), id='op_menu_switcher', state=adminSG.op_menu),
             Button(Const('📋Выгрузка базы пользователей'), id='get_users_txt', on_click=getters.get_users_txt),
@@ -47,31 +47,43 @@ admin_dialog = Dialog(
         state=adminSG.get_price
     ),
     Window(
-        Format('🔗 *Меню управления диплинками*\n\n'
-               '🎯 *Имеющиеся диплинки*:\n{links}'),
+        Format('🔗 *Меню управления диплинками*'),
         Column(
-            Button(Const('➕ Добавить диплинк'), id='add_deeplink', on_click=getters.add_deeplink),
-            SwitchTo(Const('❌ Удалить диплинки'), id='del_deeplinks', state=adminSG.deeplink_del),
-        ),
-        SwitchTo(Const('🔙 Назад'), id='back', state=adminSG.start),
-        getter=getters.deeplink_menu_getter,
-        state=adminSG.deeplink_menu
-    ),
-    Window(
-        Const('❌ Выберите диплинк для удаления'),
-        Group(
             Select(
-                Format('🔗 {item[0]}'),
-                id='deeplink_builder',
+                Format('{item[0]}'),
+                id='deeplinks_menu_builder',
                 item_id_getter=lambda x: x[1],
                 items='items',
-                on_click=getters.del_deeplink
+                on_click=getters.deeplink_choose
             ),
-            width=1
         ),
-        SwitchTo(Const('🔙 Назад'), id='deeplinks_back', state=adminSG.deeplink_menu),
-        getter=getters.del_deeplink_getter,
-        state=adminSG.deeplink_del
+        Row(
+            Button(Const('◀️'), id='back_deeplinks_pager', on_click=getters.deeplinks_pager, when='not_first'),
+            Button(Format('{page}'), id='deeplinks_pager', when='deeplinks'),
+            Button(Const('▶️'), id='next_deeplinks_pager', on_click=getters.deeplinks_pager, when='not_last')
+        ),
+        SwitchTo(Const('➕ Добавить диплинк'), id='add_deeplink', state=adminSG.get_deeplink_name),
+        SwitchTo(Const('🔙 Назад'), id='back', state=adminSG.start),
+        getter=getters.deeplinks_menu_getter,
+        state=adminSG.deeplinks_menu
+    ),
+    Window(
+        Const('Введите название для данной ссылки'),
+        TextInput(
+            id='get_link_name',
+            on_success=getters.get_deeplink_name
+        ),
+        SwitchTo(Const('🔙 Назад'), id='back_deeplinks_menu', state=adminSG.deeplink_menu),
+        state=adminSG.get_deeplink_name
+    ),
+    Window(
+        Format('{text}'),
+        Column(
+            Button(Const('🗑Удалить диплинк'), id='del_deeplink', on_click=getters.del_deeplink),
+        ),
+        SwitchTo(Const('🔙 Назад'), id='back_deeplinks_menu', state=adminSG.deeplinks_menu),
+        getter=getters.deeplink_menu_getter,
+        state=adminSG.deeplink_menu
     ),
     Window(
         Format('👥 *Меню управления администраторами*\n\n {admins}'),
@@ -88,7 +100,7 @@ admin_dialog = Dialog(
               '⚠️ Ссылка одноразовая и предназначена для добавления только одного админа'),
         Column(
             Url(Const('🔗 Добавить админа (ссылка)'), id='add_admin',
-                url=Format('http://t.me/share/url?url=https://t.me/bot?start={id}')),  # поменять ссылку
+                url=Format('http://t.me/share/url?url=https://t.me/VedmaAstroBot?start={id}')),  # поменять ссылку
             Button(Const('🔄 Создать новую ссылку'), id='new_link_create', on_click=getters.refresh_url),
             SwitchTo(Const('🔙 Назад'), id='back_admin_menu', state=adminSG.admin_menu)
         ),

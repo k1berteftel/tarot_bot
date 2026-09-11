@@ -13,9 +13,10 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from storage.nats_storage import NatsStorage
 from utils.nats_connect import connect_to_nats
+from utils.start_utils import start_schedulers
 from database.build import PostgresBuild
 from database.model import Base
-from database.action_data_class import setup_tables
+from database.action_data_class import setup_tables, DataInteraction
 from config_data.config import load_config, Config
 from handlers.user_handlers import user_router
 from dialogs import get_dialogs
@@ -51,8 +52,12 @@ async def main():
     session = database.session()
     await setup_tables(session)
 
+    db = DataInteraction(session)
+
     scheduler: AsyncIOScheduler = AsyncIOScheduler()
     scheduler.start()
+
+    await start_schedulers(scheduler, db)
 
     #nc, js = await connect_to_nats(servers=config.nats.servers)
     #storage: NatsStorage = await NatsStorage(nc=nc, js=js).create_storage()

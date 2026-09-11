@@ -167,7 +167,10 @@ async def get_question(msg: Message, widget: ManagedTextInput, dialog_manager: D
 async def fee_getter(event_from_user: User, dialog_manager: DialogManager, **kwargs):
     session: DataInteraction = dialog_manager.middleware_data.get('session')
     rate = dialog_manager.dialog_data.get('rate')
-    cost = await session.get_rate_price(rate)
+    if session:
+        cost = await session.get_rate_price(rate)
+    else:
+        cost = 450
     if not dialog_manager.start_data:
         text = (f'📋 Ваш запрос принят. Благодарим за доверие! 🔮\n\n<b>🃏 Стоимость расклада — {cost} ₽</b>\n\n'
                 f'После оплаты начнётся разбор вашего запроса. В течение нескольких минут вы получите подробную '

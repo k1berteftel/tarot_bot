@@ -6,6 +6,8 @@ from aiogram.fsm.state import State, StatesGroup
 class startSG(StatesGroup):
     start = State()
 
+    help = State()
+
 
 class FormSG(StatesGroup):
     get_name = State()
@@ -43,8 +45,9 @@ class adminSG(StatesGroup):
     get_keyboard = State()
     confirm_mail = State()
 
+    deeplinks_menu = State()
+    get_deeplink_name = State()
     deeplink_menu = State()
-    deeplink_del = State()
 
     admin_menu = State()
     admin_del = State()

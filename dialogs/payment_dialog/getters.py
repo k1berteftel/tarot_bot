@@ -46,6 +46,8 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
         bot,
         user_id=clb.from_user.id,
         chat_id=clb.message.chat.id,
+        stack_id=dialog_manager.current_stack().id,
+        load=True
     )
 
     if payment_type == 'card':
@@ -55,10 +57,10 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
                 payment_id=payment.get('id'),
                 user_id=clb.from_user.id,
                 bot=clb.bot,
+                message=clb.message,
                 context=state,
                 bg_manager=bg_manager,
                 data=dialog_manager.dialog_data,
-                session=session,
                 currency=cost,
                 payment_type='card',
             )
@@ -73,10 +75,10 @@ async def payment_choose(clb: CallbackQuery, widget: Button, dialog_manager: Dia
                 payment_id=payment.get('id'),
                 user_id=clb.from_user.id,
                 bot=clb.bot,
+                message=clb.message,
                 context=state,
                 bg_manager=bg_manager,
                 data=dialog_manager.dialog_data,
-                session=session,
                 currency=cost,
                 payment_type='sbp',
             )

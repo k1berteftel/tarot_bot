@@ -21,27 +21,30 @@ class RemindMiddleware(BaseMiddleware):
         data: Dict[str, Any]
     ) -> Any:
         user: User = data.get('event_from_user')
-
         if user is None:
             return await handler(event, data)
 
         session: DataInteraction = data.get('session')
-        await session.set_activity(user_id=user.id)
+        if session is not None:
+            await session.set_activity(user_id=user.id)
+
         scheduler: AsyncIOScheduler = data.get('scheduler')
-        job = scheduler.get_job(job_id=f'horoscope_{user.id}')
+        if scheduler is not None:
+            job = scheduler.get_job(job_id=f'horoscope_{user.id}')
+        else:
+            job = None
 
         result = await handler(event, data)
 
         bot: Bot = data.get('bot')
-        if not job:
+        if bot is not None and not job and scheduler is not None:
             try:
                 scheduler.add_job(
                     send_daily_horoscope,
                     'cron',
                     args=[bot, user.id],
-                    hour=8,
-                    minute=0,
-                    id=f'horoscope_{user.id}'
+                    hour=8, minute=0,
+                    id=f'horoscope_{user.id}',
                 )
             except Exception:
                 ...

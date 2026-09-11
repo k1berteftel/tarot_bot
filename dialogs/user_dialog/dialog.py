@@ -1,6 +1,7 @@
 from aiogram_dialog import Dialog, Window
-from aiogram_dialog.widgets.kbd import SwitchTo, Column, Row, Button, Group, Select, Start, Url
+from aiogram_dialog.widgets.kbd import SwitchTo, Column, Row, Button, Group, Select, Start, Url, Back
 from aiogram_dialog.widgets.text import Format, Const
+from aiogram_dialog.widgets.style import Style
 from aiogram_dialog.widgets.input import TextInput
 from aiogram_dialog.widgets.media import DynamicMedia
 
@@ -27,11 +28,21 @@ user_dialog = Dialog(
                 text='Здравствуйте, хочу провести ритуал'
             ))),
             #Button(Const('🔮 Вопрос-ответ'), id='question_rate_choose', on_click=getters.choose_rate),
-            Url(Const("Политики конфиденциальности"), id='policy_url', url=Const('https://telegra.ph/Politika-konfidencialnosti-08-27-94')),
-            Url(Const('Пользовательское соглашение'), id='agree_url', url=Const('https://telegra.ph/Polzovatelskoe-soglashenie-08-27-70')),
+            SwitchTo(Const('📝Прочее'), id='help_switcher', state=startSG.help),
             Start(Const('Админ панель'), id='admin', state=adminSG.start, when='admin')
         ),
         getter=getters.start_getter,
         state=startSG.start
-    )
+    ),
+    Window(
+        Const('📝Тут вы можете ознакомиться с политикой конфиденциальности и пользовательским соглашением'),
+        Column(
+            Url(Const("🔗Политики конфиденциальности"), id='policy_url',
+                url=Const('https://telegra.ph/Politika-konfidencialnosti-08-27-94')),
+            Url(Const('🔗Пользовательское соглашение'), id='agree_url',
+                url=Const('https://telegra.ph/Polzovatelskoe-soglashenie-08-27-70')),
+        ),
+        Back(Const('Назад'), id='back', style=Style(emoji_id="5388584622328131561")),
+        state=startSG.help
+    ),
 )

@@ -26,8 +26,9 @@ class TransferObjectsMiddleware(BaseMiddleware):
 
         sessions: async_sessionmaker = data.get('_session')
         scheduler: AsyncIOScheduler = data.get('_scheduler')
-
-        interaction = DataInteraction(sessions)
-        data['session'] = interaction
-        data['scheduler'] = scheduler
+        if sessions:
+            interaction = DataInteraction(sessions)
+            data['session'] = interaction
+        if scheduler:
+            data['scheduler'] = scheduler
         return await handler(event, data)

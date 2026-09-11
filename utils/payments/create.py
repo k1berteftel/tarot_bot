@@ -13,6 +13,7 @@ from aioyookassa.types.payment import (Money, Confirmation, Receipt, Customer,
 from aioyookassa.types.enum import PaymentStatus, ConfirmationType, Currency
 from aioyookassa.types.params import CreatePaymentParams, GetPaymentsParams
 
+from utils.decorators import retry_decorator
 from config_data.config import Config, load_config
 
 logger = logging.getLogger(__name__)
@@ -117,6 +118,7 @@ async def get_platega_sbp(amount: float, user_id: int):
             ...
 
 
+@retry_decorator(3, 3)
 async def get_platega_card(amount: float, user_id: int):
     try:
         data = await client.create_transaction(
@@ -154,10 +156,10 @@ async def get_platega_card(amount: float, user_id: int):
 # print(asyncio.run(get_platega_sbp(500.0, 8005178596)))
 
 
+@retry_decorator(3, 3)
 async def check_platega_transaction(transaction_id):
     transaction = await client.get_transaction_status(transaction_id)
-    print(transaction.status)
     return transaction.status == 'CONFIRMED'
-
-
-print(asyncio.run(check_platega_transaction('9fd95581-63fb-4ba3-a650-8a72e0914cf6')))
+#
+#
+# print(asyncio.run(check_platega_transaction('9fd95581-63fb-4ba3-a650-8a72e0914cf6')))

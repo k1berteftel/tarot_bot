@@ -26,6 +26,7 @@ async def start_dialog(msg: Message, dialog_manager: DialogManager, session: Dat
             deeplinks = await session.get_deeplinks()
             deep_list = [i.link for i in deeplinks]
             if args in deep_list:
+                link = args
                 await session.add_entry(args)
             #try:
                 #args = int(args)

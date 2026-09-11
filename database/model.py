@@ -14,11 +14,15 @@ class UsersTable(Base):
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
 
+    user_id: Mapped[int] = mapped_column(BigInteger, unique=True)
     username: Mapped[str] = mapped_column(VARCHAR)
     name: Mapped[str] = mapped_column(VARCHAR)
-    user_id: Mapped[int] = mapped_column(BigInteger, unique=True)
+
+    join: Mapped[str] = mapped_column(VARCHAR, default=None, nullable=True)
+
     active: Mapped[int] = mapped_column(Integer, default=1)
     activity: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=False), default=func.now())
+
     entry: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=False), default=func.now())
     augury: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=False), default=None, nullable=True)
 
@@ -30,8 +34,16 @@ class DeeplinksTable(Base):
 
     id: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
 
+    name: Mapped[str] = mapped_column(VARCHAR)
     link: Mapped[str] = mapped_column(VARCHAR)
     entry: Mapped[int] = mapped_column(BigInteger, default=0)
+    income: Mapped[int] = mapped_column(Integer, default=0)
+    earned: Mapped[int] = mapped_column(Integer, default=0)
+    today: Mapped[int] = mapped_column(Integer, default=0)
+    week: Mapped[int] = mapped_column(Integer, default=0)
+    create: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=False), default=func.now())
+
+    creator: Mapped[int] = mapped_column(BigInteger, default=None, server_default=None, nullable=True)
 
 
 class AdminsTable(Base):
@@ -84,6 +96,10 @@ class StaticTable(Base):
     future_buys: Mapped[int] = mapped_column(Integer, default=0)
 
     question_buys: Mapped[int] = mapped_column(Integer, default=0)
+
+    today: Mapped[int] = mapped_column(Integer, default=0)
+    week: Mapped[int] = mapped_column(Integer, default=0)
+    month: Mapped[int] = mapped_column(Integer, default=0)
 
 
 
