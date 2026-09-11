@@ -90,7 +90,9 @@ async def create_messages(form_data: dict, rate: str, context_messages: list[Bas
                 'content': prompt
             }
         )
-        prompt = messages
+        user_prompt = messages
+    else:
+        user_prompt = prompt
 
     # процесс генерации расклада
     try:
