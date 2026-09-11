@@ -75,8 +75,8 @@ async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, messa
     while True:
         if payment_type in ['card', 'sbp']:
             logger.info('Checking plageta transaction')
-            # status = await check_platega_transaction(payment_id)
-            status = True
+            status = await check_platega_transaction(payment_id)
+            # status = True
             logger.info(f'Transaction status: {status}')
         else:
             status = False
