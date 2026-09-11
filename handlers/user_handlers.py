@@ -95,7 +95,7 @@ async def handle_payment_switcher(clb: CallbackQuery, dialog_manager: DialogMana
     question = data.get('target_question')
     cost = data.get('cost')
 
-    data['rate'] = 'question'
+    data['rate'] = data.get('init_rate')
     data['question'] = question
     data['ai_context'] = ai_context
     data['cost'] = cost

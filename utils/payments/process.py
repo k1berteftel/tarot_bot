@@ -99,7 +99,10 @@ async def execute_rate(user_id: int, currency: int, data: dict, bot: Bot, contex
     try:
         await session.add_income(currency)
         await session.increment_static('buys', 1)
-        await session.increment_static(rate + '_buys', 1)
+        if not data.get('ai_context'):
+            await session.increment_static(rate + '_buys', 1)
+        else:
+            await session.increment_static('question_buys', 1)
         user = await session.get_user(user_id)
         if user.join:
             await session.update_deeplink_earn(user.join, currency)

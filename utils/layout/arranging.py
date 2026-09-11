@@ -24,8 +24,8 @@ def _get_result_prompt(data: dict, rate: str, first: bool = True) -> str:
     if first:
         prompt = PROMPTS.get(rate)
     else:
+        # rate == 'question'
         prompt = ADDITIONAL_PROMPTS.get(rate)
-        prompt.format(user_question=data.get('question'))
     if rate == 'relation':
         prompt_data = {
             'name': data.get('name'),
@@ -54,14 +54,21 @@ def _get_result_prompt(data: dict, rate: str, first: bool = True) -> str:
         prompt_data = {
             'name': data.get('name'),
             'birth_date': data.get('birthday').strftime("%d-%m-%Y"),
-            'life_area': data.get('sphere'),
-            'user_question': data.get('purpose')
+            'life_area': data.get('sphere')
         }
+        if first:
+            prompt_data['user_question'] = data.get('purpose')
+        else:
+            prompt_data['user_question_original'] = data.get('purpose')
     else:  # question
         prompt_data = {}
         pass
-    print(prompt_data)
-    prompt = prompt.format(**prompt_data)
+
+    if first:
+        prompt = prompt.format(**prompt_data)
+    else:
+        # rate == 'question'
+        prompt.format(**prompt_data, user_question=data.get('question'))
     return prompt
 
 
@@ -165,7 +172,7 @@ async def process_arranging(form_data: dict, user_id: int, bot: Bot, context: FS
     if not upsell_message:
         logger.error('Ошибка создания сообщения допродажи')
         return
-    await context.update_data(questions=upsell_message.questions, ai_context=messages.messages, ai_data=form_data)
+    await context.update_data(questions=upsell_message.questions, ai_context=messages.messages, ai_data=form_data, init_rate=rate)
     try:
         await bot.send_message(
             chat_id=user_id,
