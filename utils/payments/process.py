@@ -84,7 +84,7 @@ async def _poll_payment(payment_id, user_id: int, currency: int, bot: Bot, messa
             await close_all_dialogs(bot, message, bg_manager)
             await bot.send_message(
                 chat_id=user_id,
-                text='✅Оплата прошла успешно'
+                text='✅Оплата прошла успешно\nПожалуйста ожидайте'
             )
             logger.info('Start execute rate')
             await execute_rate(user_id, currency, data, bot, context)

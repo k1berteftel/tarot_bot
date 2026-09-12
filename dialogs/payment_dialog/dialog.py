@@ -26,6 +26,7 @@ payment_dialog = Dialog(
     Window(
         Const('<b><tg-emoji emoji-id="5990109364956958958">⌛️</tg-emoji>Ожидание оплаты</b>'),
         Format('{text}'),
+        Const('<em>❗️Если страница не открывается, попробуйте выключить ВПН</em>'),
         Column(
             Url(Const('Оплатить'), id='url', url=Format('{url}'), style=Style(emoji_id="5256057883082107781")),
         ),
