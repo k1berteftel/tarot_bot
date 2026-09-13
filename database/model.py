@@ -43,8 +43,6 @@ class DeeplinksTable(Base):
     week: Mapped[int] = mapped_column(Integer, default=0)
     create: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=False), default=func.now())
 
-    creator: Mapped[int] = mapped_column(BigInteger, default=None, server_default=None, nullable=True)
-
 
 class AdminsTable(Base):
     __tablename__ = 'admins'

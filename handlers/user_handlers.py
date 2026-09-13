@@ -15,6 +15,7 @@ user_router = Router()
 @user_router.message(CommandStart())
 async def start_dialog(msg: Message, dialog_manager: DialogManager, session: DataInteraction, command: CommandObject):
     args = command.args
+    link = None
     #referral = None
     if args:
         link_ids = await session.get_links()
@@ -37,7 +38,7 @@ async def start_dialog(msg: Message, dialog_manager: DialogManager, session: Dat
             #except Exception as err:
                 #print(err)
     await session.add_user(msg.from_user.id, msg.from_user.username if msg.from_user.username else 'Отсутствует',
-                           msg.from_user.full_name)
+                           msg.from_user.full_name, link)
     if dialog_manager.has_context():
         await dialog_manager.done()
         try:
