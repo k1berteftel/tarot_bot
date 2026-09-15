@@ -3,6 +3,8 @@ import asyncio
 import base64
 
 from anthropic import AsyncAnthropic
+from anthropic.types.thinking_block import ThinkingBlock
+from anthropic.types.text_block import TextBlock
 
 from config_data.config import Config, load_config
 
@@ -48,4 +50,14 @@ async def get_ai_answer(prompt: str | list[dict], system_prompt: str | None = No
         system=system_prompt if system_prompt else None,
         messages=messages
     )
-    return message.content[0].text
+    result = None
+    for content in message.content:
+        if isinstance(content, TextBlock):
+            result = content.text
+
+    if result:
+        return result
+    raise Exception(f'content contains: {message.content}')
+
+
+print(asyncio.run(get_ai_answer('Привет')))
