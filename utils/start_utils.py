@@ -1,6 +1,15 @@
 from datetime import datetime, timedelta
+
+from aiogram import Bot
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 from database.action_data_class import DataInteraction
+from utils.horoscope import send_daily_horoscope
+
+
+async def wrapper_daily_horoscope(bot: Bot, db: DataInteraction):
+    for user in await db.get_users():
+        await send_daily_horoscope(bot, user.user_id)
 
 
 async def wrapper_today(session: DataInteraction):
@@ -19,7 +28,7 @@ async def wrapper_month(session: DataInteraction):
     await session.set_static_value(month=0)
 
 
-async def start_schedulers(scheduler: AsyncIOScheduler, session: DataInteraction):
+async def start_schedulers(scheduler: AsyncIOScheduler, session: DataInteraction, bot: Bot):
     """Запуск всех планировщиков"""
     # Ежедневный сброс в 00:00
     scheduler.add_job(
@@ -47,5 +56,12 @@ async def start_schedulers(scheduler: AsyncIOScheduler, session: DataInteraction
         hour=0,
         minute=0,
         id='reset_monthly_profit'
+    )
+    scheduler.add_job(
+        wrapper_daily_horoscope,
+        'cron',
+        args=[bot, session],
+        hour=8, minute=0,
+        id=f'daily_horoscope',
     )
 

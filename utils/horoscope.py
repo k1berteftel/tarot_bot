@@ -527,8 +527,11 @@ async def send_daily_horoscope(bot: Bot, user_id: int):
     text = horoscope_manager.format_daily_message(horoscope)
 
     # Отправляем
-    await bot.send_message(
-        chat_id=user_id,
-        text=text,
-        parse_mode='HTML'
-    )
+    try:
+        await bot.send_message(
+            chat_id=user_id,
+            text=text,
+            parse_mode='HTML'
+        )
+    except Exception:
+        ...
