@@ -60,4 +60,4 @@ async def get_ai_answer(prompt: str | list[dict], system_prompt: str | None = No
     raise Exception(f'content contains: {message.content}')
 #
 #
-# print(asyncio.run(get_ai_answer('Привет')))
+print(asyncio.run(get_ai_answer('Привет')))

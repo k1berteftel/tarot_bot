@@ -54,6 +54,10 @@ async def main():
 
     db = DataInteraction(session)
 
+    user = await db.get_user(622585765)
+    print(user.username)
+    return
+
     scheduler: AsyncIOScheduler = AsyncIOScheduler()
     scheduler.start()
 
